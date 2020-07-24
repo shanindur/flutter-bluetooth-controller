@@ -22,6 +22,8 @@ environment:
 
 dependencies:
   flutter_bluetooth_serial: ^0.2.2
+  vibration: ^1.4.0
+  flutter_switch: ^0.1.1
   flutter:
     sdk: flutter
 
@@ -61,10 +63,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/lato/Lato-Regular.ttf
+
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
