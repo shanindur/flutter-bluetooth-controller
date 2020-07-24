@@ -61,39 +61,7 @@ class _ButtonScreenState extends State<ButtonScreen> {
         crossAxisCount: 2,
         children: <Widget>[
           Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: InkWell(
-            onTap: (){
-              _sendMessageToBluetooth("1");
-            },
-            borderRadius: BorderRadius.circular(50.0),
-            child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  offset: Offset(0.0, 1.0), //(x,y)
-                  blurRadius: 6.0,
-                ),
-              ],
-              ),
-              child: Center(child: Text("1",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 30.0
-              ),)),
-            ),
-          ),
-        ),
-          Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: InkWell(
-              onTap: (){
-                _sendMessageToBluetooth("2");
-              },
-              borderRadius: BorderRadius.circular(100.0),
+              padding: const EdgeInsets.all(40.0),
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -106,21 +74,24 @@ class _ButtonScreenState extends State<ButtonScreen> {
                     ),
                   ],
                 ),
-                child: Center(child: Text("2",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30.0
-                  ),)),
-              ),
-            ),
+                child: ClipOval(
+                  child: RaisedButton(
+                    onPressed: () {
+                      _sendMessageToBluetooth("1");
+                      Vibration.vibrate(duration: 100);
+                    },
+                    color: Colors.grey,
+                    child: Text("1",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.0
+                      ),),
+                  ),
+                ),
+              )
           ),
           Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: InkWell(
-              onTap: (){
-                _sendMessageToBluetooth("3");
-              },
-              borderRadius: BorderRadius.circular(50.0),
+              padding: const EdgeInsets.all(40.0),
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -133,21 +104,24 @@ class _ButtonScreenState extends State<ButtonScreen> {
                     ),
                   ],
                 ),
-                child: Center(child: Text("3",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30.0
-                  ),)),
-              ),
-            ),
+                child: ClipOval(
+                  child: RaisedButton(
+                    onPressed: () {
+                      _sendMessageToBluetooth("2");
+                      Vibration.vibrate(duration: 100);
+                    },
+                    color: Colors.grey,
+                    child: Text("2",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.0
+                      ),),
+                  ),
+                ),
+              )
           ),
           Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: InkWell(
-              onTap: (){
-                _sendMessageToBluetooth("4");
-              },
-              borderRadius: BorderRadius.circular(50.0),
+              padding: const EdgeInsets.all(40.0),
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -160,21 +134,24 @@ class _ButtonScreenState extends State<ButtonScreen> {
                     ),
                   ],
                 ),
-                child: Center(child: Text("4",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30.0
-                  ),)),
-              ),
-            ),
+                child: ClipOval(
+                  child: RaisedButton(
+                    onPressed: () {
+                      _sendMessageToBluetooth("3");
+                      Vibration.vibrate(duration: 100);
+                    },
+                    color: Colors.grey,
+                    child: Text("3",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.0
+                      ),),
+                  ),
+                ),
+              )
           ),
           Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: InkWell(
-              onTap: (){
-                _sendMessageToBluetooth("5");
-              },
-              borderRadius: BorderRadius.circular(50.0),
+              padding: const EdgeInsets.all(40.0),
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -187,21 +164,24 @@ class _ButtonScreenState extends State<ButtonScreen> {
                     ),
                   ],
                 ),
-                child: Center(child: Text("5",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30.0
-                  ),)),
-              ),
-            ),
+                child: ClipOval(
+                  child: RaisedButton(
+                    onPressed: () {
+                      _sendMessageToBluetooth("4");
+                      Vibration.vibrate(duration: 100);
+                    },
+                    color: Colors.grey,
+                    child: Text("4",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.0
+                      ),),
+                  ),
+                ),
+              )
           ),
           Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: GestureDetector(
-              onTap: (){
-                Vibration.vibrate(duration: 1000);
-                _sendMessageToBluetooth("6");
-              },
+              padding: const EdgeInsets.all(40.0),
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -214,13 +194,111 @@ class _ButtonScreenState extends State<ButtonScreen> {
                     ),
                   ],
                 ),
-                child: Center(child: Text("6",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30.0
-                  ),)),
-              ),
-            ),
+                child: ClipOval(
+                  child: RaisedButton(
+                    onPressed: () {
+                      _sendMessageToBluetooth("5");
+                      Vibration.vibrate(duration: 100);
+                    },
+                    color: Colors.grey,
+                    child: Text("5",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.0
+                      ),),
+                  ),
+                ),
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0.0, 1.0), //(x,y)
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: RaisedButton(
+                    onPressed: () {
+                      _sendMessageToBluetooth("6");
+                      Vibration.vibrate(duration: 100);
+                    },
+                    color: Colors.grey,
+                    child: Text("6",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.0
+                      ),),
+                  ),
+                ),
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0.0, 1.0), //(x,y)
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: RaisedButton(
+                    onPressed: () {
+                      _sendMessageToBluetooth("7");
+                      Vibration.vibrate(duration: 100);
+                    },
+                    color: Colors.grey,
+                    child: Text("7",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.0
+                      ),),
+                  ),
+                ),
+              )
+          ),
+          Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: Offset(0.0, 1.0), //(x,y)
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: RaisedButton(
+                    onPressed: () {
+                      _sendMessageToBluetooth("8");
+                      Vibration.vibrate(duration: 100);
+                    },
+                    color: Colors.grey,
+                    child: Text("8",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.0
+                      ),),
+                  ),
+                ),
+              )
           ),
         ],
       )
@@ -232,7 +310,6 @@ class _ButtonScreenState extends State<ButtonScreen> {
   void _sendMessageToBluetooth(String value) async {
 
       widget.connection.output.add(utf8.encode(value.toString()));
-      show('Press button ' + value.toString());
       await widget.connection.output.allSent;
 
   }

@@ -86,13 +86,11 @@ class _SwitchScreenState extends State<SwitchScreen> {
   void _sendMessageToBluetooth(bool value) async {
     if(value){
       widget.connection.output.add(utf8.encode("1"));
-      show('Device Turned On');
       setState(() {
         _switchState = true; // switch on
       });
     }else{
       widget.connection.output.add(utf8.encode("0"));
-      show('Device Turned Off');
       setState(() {
         _switchState = false; // switch off
       });
