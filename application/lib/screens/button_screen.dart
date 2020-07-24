@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:vibration/vibration.dart';
 
 class ButtonScreen extends StatefulWidget {
   final BluetoothDevice device;
@@ -48,7 +50,10 @@ class _ButtonScreenState extends State<ButtonScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Color(0xFF00979d),
-        title: Text("Buttons"
+        title: Text("Buttons",
+          style: TextStyle(
+            fontFamily: 'Lato',
+          ),
         ),
         centerTitle: true,
       ),
@@ -88,7 +93,7 @@ class _ButtonScreenState extends State<ButtonScreen> {
               onTap: (){
                 _sendMessageToBluetooth("2");
               },
-              borderRadius: BorderRadius.circular(50.0),
+              borderRadius: BorderRadius.circular(100.0),
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -192,11 +197,11 @@ class _ButtonScreenState extends State<ButtonScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(40.0),
-            child: InkWell(
+            child: GestureDetector(
               onTap: (){
+                Vibration.vibrate(duration: 1000);
                 _sendMessageToBluetooth("6");
               },
-              borderRadius: BorderRadius.circular(50.0),
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,

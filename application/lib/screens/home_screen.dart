@@ -155,7 +155,7 @@ class _HomeAppState extends State<HomeApp> {
                 "Refresh",
                 style: TextStyle(
                   color: Colors.white,
-//                  fontFamily: 'Montserrat',
+                  fontFamily: 'Lato',
                 ),
               ),
               shape: RoundedRectangleBorder(
@@ -194,7 +194,7 @@ class _HomeAppState extends State<HomeApp> {
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-//                            fontFamily: 'Montserrat',
+                            fontFamily: 'Lato',
                             fontSize: 18.0
                         ),)),
                 ),
@@ -208,6 +208,7 @@ class _HomeAppState extends State<HomeApp> {
                           'Enable Bluetooth',
                           style: TextStyle(
                             color: Colors.black,
+                            fontFamily: 'Lato',
                             fontSize: 14.0,
                           ),
                         ),
@@ -254,6 +255,7 @@ class _HomeAppState extends State<HomeApp> {
                               'Bluetooth Status',
                               style: TextStyle(
                                 color: Colors.black,
+                                fontFamily: 'Lato',
                                 fontSize: 14.0,
                               ),
                             ),
@@ -261,6 +263,7 @@ class _HomeAppState extends State<HomeApp> {
                               _bluetoothState.toString(),
                               style: TextStyle(
                                 color: Colors.grey,
+                                fontFamily: 'Lato',
                                 fontSize: 14.0,
                               ),
                             ),
@@ -271,7 +274,8 @@ class _HomeAppState extends State<HomeApp> {
                         elevation: 2,
                         child: Text("Settings",
                           style: TextStyle(
-                              color: Colors.black
+                            color: Colors.black,
+                            fontFamily: 'Lato',
                           ),),
                         onPressed: () {
                           FlutterBluetoothSerial.instance.openSettings();
@@ -288,6 +292,7 @@ class _HomeAppState extends State<HomeApp> {
                       child: Text("Paired Devices",
                         style: TextStyle(
                             color: Colors.black,
+                            fontFamily: 'Lato',
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0
                         ),)),
@@ -297,7 +302,7 @@ class _HomeAppState extends State<HomeApp> {
                   child:  Text("Note: If you can't find the device in the list, please pair the device by going to the settings.",
                     style: TextStyle(
                         fontStyle: FontStyle.italic,
-//                        fontFamily: 'Montserrat',
+                        fontFamily: 'Lato',
                         color: Colors.grey
                     ),
                     textAlign: TextAlign.justify,
@@ -313,7 +318,10 @@ class _HomeAppState extends State<HomeApp> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               DropdownButton(
-                                hint: Text("Select a paired device"),
+                                hint: Text("Select a paired device",
+                                style: TextStyle(
+                                  fontFamily: 'Lato',
+                                ),),
                                 items: _getDeviceItems(),
                                 onChanged: (value) =>
                                     setState(() => _device = value),
@@ -327,7 +335,8 @@ class _HomeAppState extends State<HomeApp> {
                                 child:
                                 Text(_connected ? 'Disconnect' : 'Connect',
                                   style: TextStyle(
-                                      color: Colors.white
+                                    color: Colors.white,
+                                    fontFamily: 'Lato',
                                   ),),
                               ),
                             ],
@@ -341,6 +350,7 @@ class _HomeAppState extends State<HomeApp> {
                               child: Text("Controller",
                                 style: TextStyle(
                                     color: Colors.black,
+                                    fontFamily: 'Lato',
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.0
                                 ),)),
@@ -424,7 +434,8 @@ class _HomeAppState extends State<HomeApp> {
                                   ),
                                   child: Center(child: Text('Switch',
                                     style: TextStyle(
-                                        color: Colors.white
+                                      color: Colors.white,
+                                      fontFamily: 'Lato',
                                     ),)),
                                 ),),
                               GestureDetector(
@@ -452,7 +463,8 @@ class _HomeAppState extends State<HomeApp> {
                                   ),
                                   child: Center(child: Text('Terminal',
                                     style: TextStyle(
-                                        color: Colors.white
+                                      color: Colors.white,
+                                      fontFamily: 'Lato',
                                     ),)),
                                 ),),
                               GestureDetector(
@@ -480,7 +492,8 @@ class _HomeAppState extends State<HomeApp> {
                                   ),
                                   child: Center(child: Text('Buttons',
                                     style: TextStyle(
-                                        color: Colors.white
+                                      color: Colors.white,
+                                      fontFamily: 'Lato',
                                     ),)),
                                 ),),
                             ],
@@ -498,6 +511,7 @@ class _HomeAppState extends State<HomeApp> {
                   child: Text("Powered by Shanindu Rajapaksha",
                     style: TextStyle(
                         color: Colors.grey,
+                        fontFamily: 'Lato',
                         fontSize: 14.0
                     ),),
                 )

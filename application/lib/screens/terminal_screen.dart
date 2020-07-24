@@ -71,7 +71,11 @@ class _TerminalScreenState extends State<TerminalScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF00979d),
-          title: (Text('Terminal')
+          centerTitle: true,
+          title: (Text('Terminal',
+          style: TextStyle(
+            fontFamily: 'Lato',
+          ),)
             )),
       body: SafeArea(
         child: Column(
@@ -103,7 +107,7 @@ class _TerminalScreenState extends State<TerminalScreen> {
                         style: const TextStyle(fontSize: 15.0),
                         controller: textEditingController,
                         decoration: InputDecoration.collapsed(
-                          hintText: 'Type your message...',
+                          hintText: 'Type your data to send...',
                           hintStyle: const TextStyle(color: Colors.grey),
                         ),
                         enabled: isConnected,
@@ -113,7 +117,9 @@ class _TerminalScreenState extends State<TerminalScreen> {
                   Container(
                     margin: const EdgeInsets.all(8.0),
                     child: IconButton(
-                        icon: const Icon(Icons.send),
+                        icon: const Icon(
+                          Icons.send,
+                          color: Colors.blue),
                         onPressed: isConnected
                             ? () => _sendMessage(textEditingController.text)
                             : null),

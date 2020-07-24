@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 class SwitchScreen extends StatefulWidget {
   final BluetoothDevice device;
@@ -52,18 +53,29 @@ class _SwitchScreenState extends State<SwitchScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Switch"
+        title: Text("Switch",
+          style: TextStyle(
+            fontFamily: 'Lato',
+          ),
         ),
         centerTitle: true,
         backgroundColor: Color(0xFF00979d),
       ),
       body: Center(
-        child: Switch(
+        child: FlutterSwitch(
               value: _switchState,
-              onChanged: (bool value) {
+              showOnOff: true,
+              width: 125.0,
+              height: 55.0,
+              valueFontSize: 25.0,
+              toggleSize: 45.0,
+              borderRadius: 30.0,
+              padding: 8.0,
+              onToggle: (bool value) {
                 _sendMessageToBluetooth(value);
               },
-              activeColor: Color(0xFF00979d),
+              activeColor: Colors.green,
+              inactiveColor: Colors.red,
         ),
       ),
     );
