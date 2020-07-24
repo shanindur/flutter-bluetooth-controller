@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:intl/intl.dart';
 
 class TerminalScreen extends StatefulWidget {
   final BluetoothDevice device;
@@ -159,7 +160,9 @@ class _TerminalScreenState extends State<TerminalScreen> {
         await widget.connection.output.allSent;
 
         setState(() {
-          messages.add(_Message(clientID, text, new TimeOfDay.now().toString()));
+          DateTime now = DateTime.now();
+          String formattedTime = DateFormat('kk:mm').format(now);
+          messages.add(_Message(clientID, text, formattedTime));
         });
 
         Future.delayed(Duration(milliseconds: 333)).then((_) {
