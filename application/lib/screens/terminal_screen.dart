@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:intl/intl.dart';
 
 class TerminalScreen extends StatefulWidget {
   final BluetoothDevice device;
@@ -16,8 +17,9 @@ class TerminalScreen extends StatefulWidget {
 class _Message {
   int whom;
   String text;
+  String time;
 
-  _Message(this.whom, this.text);
+  _Message(this.whom, this.text, this.time);
 }
 
 class _TerminalScreenState extends State<TerminalScreen> {
@@ -48,18 +50,31 @@ class _TerminalScreenState extends State<TerminalScreen> {
       return Row(
         children: <Widget>[
           Container(
-            child: Text(
-                    (text) {
-                  return text == '/shrug' ? '¯\\_(ツ)_/¯' : text;
-                }(_message.text.trim()),
-                style: TextStyle(color: Colors.white)),
-            padding: EdgeInsets.all(12.0),
             margin: EdgeInsets.only(bottom: 8.0, left: 8.0, right: 8.0),
-            width: 222.0,
-            decoration: BoxDecoration(
-                color:
-                _message.whom == clientID ? Colors.blueAccent : Colors.grey,
-                borderRadius: BorderRadius.circular(7.0)),
+            child: Column(
+              children: [
+                Container(
+                  child: Text((text) {
+                        return text == '/shrug' ? '¯\\_(ツ)_/¯' : text;
+                      }(_message.text.trim()),
+                      style: TextStyle(color: Colors.white)),
+                  padding: EdgeInsets.all(12.0),
+                  width: 222.0,
+                  decoration: BoxDecoration(
+                      color:
+                      _message.whom == clientID ? Colors.blueAccent : Colors.grey,
+                      borderRadius: BorderRadius.circular(7.0)),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width - 190,
+                  child: Text(_message.time.toString(),
+                  style: TextStyle(
+                    color: Colors.grey
+                  ),
+                  textAlign: TextAlign.right,),
+                ),
+              ],
+            ),
           ),
         ],
         mainAxisAlignment: _message.whom == clientID
@@ -145,7 +160,9 @@ class _TerminalScreenState extends State<TerminalScreen> {
         await widget.connection.output.allSent;
 
         setState(() {
-          messages.add(_Message(clientID, text));
+          DateTime now = DateTime.now();
+          String formattedTime = DateFormat('kk:mm').format(now);
+          messages.add(_Message(clientID, text, formattedTime));
         });
 
         Future.delayed(Duration(milliseconds: 333)).then((_) {

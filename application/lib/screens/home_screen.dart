@@ -4,6 +4,7 @@ import 'package:application/screens/terminal_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 // For performing some operations asynchronously
 import 'dart:async';
 import 'dart:convert';
@@ -39,6 +40,13 @@ class _HomeAppState extends State<HomeApp> {
     'neutralTextColor': Colors.blue,
   };
 
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
+
   // To track whether the device is still connected to Bluetooth
   bool get isConnected => connection != null && connection.isConnected;
 
@@ -51,6 +59,9 @@ class _HomeAppState extends State<HomeApp> {
   @override
   void initState() {
     super.initState();
+
+    //get package information
+    _initPackageInfo();
 
     // Get current state
     FlutterBluetoothSerial.instance.state.then((state) {
@@ -77,6 +88,13 @@ class _HomeAppState extends State<HomeApp> {
         }
         getPairedDevices();
       });
+    });
+  }
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
     });
   }
 
@@ -355,55 +373,6 @@ class _HomeAppState extends State<HomeApp> {
                                     fontSize: 18.0
                                 ),)),
                         ),
-//                      Padding(
-//                        padding: const EdgeInsets.all(10.0),
-//                        child: Card(
-//                          shape: RoundedRectangleBorder(
-//                            side: new BorderSide(
-//                              color: _deviceState == 0
-//                                  ? colors['neutralBorderColor']
-//                                  : _deviceState == 1
-//                                  ? colors['onBorderColor']
-//                                  : colors['offBorderColor'],
-//                              width: 3,
-//                            ),
-//                            borderRadius: BorderRadius.circular(4.0),
-//                          ),
-//                          elevation: _deviceState == 0 ? 4 : 0,
-//                          child: Padding(
-//                            padding: const EdgeInsets.all(8.0),
-//                            child: Row(
-//                              children: <Widget>[
-//                                Expanded(
-//                                  child: Text(
-//                                    "DEVICE",
-//                                    style: TextStyle(
-//                                      fontSize: 16,
-//                                      color: _deviceState == 0
-//                                          ? colors['neutralTextColor']
-//                                          : _deviceState == 1
-//                                          ? colors['onTextColor']
-//                                          : colors['offTextColor'],
-//                                    ),
-//                                  ),
-//                                ),
-//                                FlatButton(
-//                                  onPressed: _connected
-//                                      ? _sendOnMessageToBluetooth
-//                                      : null,
-//                                  child: Text("ON"),
-//                                ),
-//                                FlatButton(
-//                                  onPressed: _connected
-//                                      ? _sendOffMessageToBluetooth
-//                                      : null,
-//                                  child: Text("OFF"),
-//                                ),
-//                              ],
-//                            ),
-//                          ),
-//                        ),
-//                      ),
                         Container(
                           margin: EdgeInsets.only(top: 20.0),
                           child: Row(
@@ -508,7 +477,8 @@ class _HomeAppState extends State<HomeApp> {
                   height: MediaQuery.of(context).size.height - 600.0,
                   margin: EdgeInsets.only(bottom: 10.0),
                   alignment: Alignment.bottomCenter,
-                  child: Text("Powered by Shanindu Rajapaksha",
+                  child: Text("Version "+_packageInfo.version + "\nPowered by Shanindu Rajapaksha" ,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.grey,
                         fontFamily: 'Lato',
