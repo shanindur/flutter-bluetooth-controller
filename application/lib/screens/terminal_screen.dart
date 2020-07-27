@@ -41,7 +41,6 @@ class _TerminalScreenState extends State<TerminalScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    show(widget.device.name);
   }
 
   @override
