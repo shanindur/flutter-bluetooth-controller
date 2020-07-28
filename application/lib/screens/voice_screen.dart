@@ -1,11 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:connectivity/connectivity.dart';
 
 
 class VoiceScreen extends StatefulWidget {
@@ -21,6 +26,9 @@ class VoiceScreen extends StatefulWidget {
 class _VoiceScreenState extends State<VoiceScreen> {
   // Initializing a global key, as it would help us in showing a SnackBar later
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  String _connectionStatus = 'Unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   final SpeechToText speech = SpeechToText();
   String _text = '';
@@ -32,55 +40,103 @@ class _VoiceScreenState extends State<VoiceScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     _initSpeechState();
     _hasSpeech = false;
+    initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Voice",
+        title: Text("Voice Control",
           style: TextStyle(
             fontFamily: 'Lato',
           ),),
         centerTitle: true,
         backgroundColor: Color(0xFF00979d),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(_text.isEmpty ? "..." : _text,
+      body: Column(
+        children: [
+          _connectionStatus == 'ConnectivityResult.none'? Container(
+            width: MediaQuery.of(context).size.width,
+              height: 25.0,
+              color: _connectionStatus == 'ConnectivityResult.none'? Colors.red : Colors.green,
+          child:  Center(
+            child: Text(_connectionStatus == 'ConnectivityResult.none'? 'Not Connected' : 'Conneted',
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Lato',
-              fontSize: 25.0
+              color: Colors.white
             ),),
-            Container(
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 0.26,
-                        spreadRadius: level * 1.5,
-                        color: Colors.black.withOpacity(0.1)
-                    )
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(50))
-              ),
-              child: FloatingActionButton(
-                onPressed: (){
-                  !_hasSpeech || speech.isListening ? null : startListening();
-                },
-                child: Icon(Icons.mic,
-                color: speech.isListening ? Colors.redAccent : Colors.white)
+          ),):Container(),
+          Container(
+            height: MediaQuery.of(context).size.height - 150,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(_text.isEmpty ? "..." : _text,
+                    style: TextStyle(
+                        fontFamily: 'Lato',
+                        fontSize: 25.0
+                    ),),
+                  Container(
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 0.26,
+                              spreadRadius: level * 1.5,
+                              color: Colors.black.withOpacity(0.1)
+                          )
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(50))
+                    ),
+                    child: FloatingActionButton(
+                        onPressed: (){
+                          !_hasSpeech || speech.isListening ? null : startListening();
+                        },
+                        child: Icon(Icons.mic,
+                            color: speech.isListening ? Colors.redAccent : Colors.white)
+                    ),
+                  ),
+                ],
               ),
             ),
-
-          ],
-        ),
+          ),
+          Text('Say "switch on / switch off"',
+          style: TextStyle(
+            color: Colors.grey
+          ),)
+        ],
       ),
     );
   }
@@ -144,6 +200,79 @@ class _VoiceScreenState extends State<VoiceScreen> {
   void _sendMessageToBluetooth(String value) async {
     widget.connection.output.add(utf8.encode(value));
     await widget.connection.output.allSent;
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        String wifiName, wifiBSSID, wifiIP;
+
+        try {
+          if (!kIsWeb && Platform.isIOS) {
+            LocationAuthorizationStatus status =
+            await _connectivity.getLocationServiceAuthorization();
+            if (status == LocationAuthorizationStatus.notDetermined) {
+              status =
+              await _connectivity.requestLocationServiceAuthorization();
+            }
+            if (status == LocationAuthorizationStatus.authorizedAlways ||
+                status == LocationAuthorizationStatus.authorizedWhenInUse) {
+              wifiName = await _connectivity.getWifiName();
+            } else {
+              wifiName = await _connectivity.getWifiName();
+            }
+          } else {
+            wifiName = await _connectivity.getWifiName();
+          }
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiName = "Failed to get Wifi Name";
+        }
+
+        try {
+          if (!kIsWeb && Platform.isIOS) {
+            LocationAuthorizationStatus status =
+            await _connectivity.getLocationServiceAuthorization();
+            if (status == LocationAuthorizationStatus.notDetermined) {
+              status =
+              await _connectivity.requestLocationServiceAuthorization();
+            }
+            if (status == LocationAuthorizationStatus.authorizedAlways ||
+                status == LocationAuthorizationStatus.authorizedWhenInUse) {
+              wifiBSSID = await _connectivity.getWifiBSSID();
+            } else {
+              wifiBSSID = await _connectivity.getWifiBSSID();
+            }
+          } else {
+            wifiBSSID = await _connectivity.getWifiBSSID();
+          }
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiBSSID = "Failed to get Wifi BSSID";
+        }
+
+        try {
+          wifiIP = await _connectivity.getWifiIP();
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiIP = "Failed to get Wifi IP";
+        }
+
+        setState(() {
+          _connectionStatus = '$result\n'
+              'Wifi Name: $wifiName\n'
+              'Wifi BSSID: $wifiBSSID\n'
+              'Wifi IP: $wifiIP\n';
+        });
+        break;
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(() => _connectionStatus = 'Failed to get connectivity.');
+        break;
+    }
   }
 
   // Method to show a Snackbar,

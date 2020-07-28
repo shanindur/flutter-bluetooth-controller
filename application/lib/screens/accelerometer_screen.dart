@@ -93,7 +93,6 @@ class _AccelerometerScreenState extends State<AccelerometerScreen> {
       ),
       body: ListView(
         children: <Widget>[
-          Text('Accelerometer $accelerometer'),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(

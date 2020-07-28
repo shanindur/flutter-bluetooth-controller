@@ -50,7 +50,7 @@ class _AboutScreenState extends State<AboutScreen> {
           style: TextStyle(
               color: Colors.grey,
               fontFamily: 'Lato',
-              fontSize: 14.0
+              fontSize: 16.0
           ),),
       ),
     );

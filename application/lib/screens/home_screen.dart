@@ -13,6 +13,9 @@ import 'dart:convert';
 // For using PlatformException
 import 'package:flutter/services.dart';
 
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:launch_review/launch_review.dart';
+
 class HomeApp extends StatefulWidget {
   @override
   _HomeAppState createState() => _HomeAppState();
@@ -30,7 +33,6 @@ class _HomeAppState extends State<HomeApp> {
   BluetoothConnection connection;
   //Firebase
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final _databaseReference = FirebaseDatabase.instance.reference();
 
   int _deviceState;
 
@@ -399,15 +401,15 @@ class _HomeAppState extends State<HomeApp> {
                                 child: ClipOval(
                                   child: RaisedButton(
                                     onPressed: () async {
-//                                          if (isConnected) {
-//                                            print('Connect -> selected ' + _device.address);
+                                      if (isConnected) {
+                                        print('Connect -> selected ' + _device.address);
                                         _startNextScreen(context, _device);
-//                                          } else {
-//                                            show('No device selected');
-//                                          }
+                                      } else {
+                                        show('No device selected');
+                                      }
                                     },
                                     color: isConnected ? Colors.green : Colors.grey,
-                                    child: Text("Start",
+                                    child: Text("Begin",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 25.0
@@ -423,9 +425,9 @@ class _HomeAppState extends State<HomeApp> {
                   ],
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 20.0, bottom: 10.0),
+                  margin: EdgeInsets.only(top: 30.0, bottom: 10.0),
                   alignment: Alignment.bottomCenter,
-                  child: Text("Version "+_packageInfo.version + "\nPowered by Shanindu Rajapaksha" ,
+                  child: Text("Version "+_packageInfo.version + "\n\nPowered by Shanindu Rajapaksha" ,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.grey,
@@ -568,9 +570,33 @@ class _HomeAppState extends State<HomeApp> {
   }
 
   Future<String> readData() async {
-    print('dan');
-    String result = (await FirebaseDatabase.instance.reference().once()).value;
-    print('pppp $result');
+    String result = (await FirebaseDatabase.instance.reference().child("app_data/version").once()).value.toString();
+    if(_packageInfo.version != result){
+      _onAlertButtonPressed(context);
+    }
     return result;
+  }
+
+  // Alert with single button.
+  _onAlertButtonPressed(context) {
+    Alert(
+      context: context,
+      type: AlertType.info,
+      title: "Update  ",
+      desc: "A new update is available.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Update",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            LaunchReview.launch(androidAppId : 'com.spacebar.flutterapp.bluetooth.application');
+            Navigator.pop(context);
+          },
+          width: 120,
+        )
+      ],
+    ).show();
   }
 }

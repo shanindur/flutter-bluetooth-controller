@@ -6,6 +6,7 @@ import 'package:application/screens/setting_screen.dart';
 import 'package:application/screens/switch_screen.dart';
 import 'package:application/screens/terminal_screen.dart';
 import 'package:application/screens/voice_screen.dart';
+import 'package:application/widgets/raised_gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -73,11 +74,15 @@ class _MenuScreenState extends State<MenuScreen> {
         crossAxisSpacing: 2.0,
         mainAxisSpacing: 2.0,
         children: [
-          RaisedButton(
+          RaisedGradientButton(
             onPressed: () {
               _startSwitchScreen(context);
             },
-            color: Colors.purple,
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: <Color>[Colors.green[800], Colors.green[900]],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -97,11 +102,15 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          RaisedButton(
+          RaisedGradientButton(
             onPressed: (){
               _startTerminalScreen(context);
             },
-            color: Colors.purple,
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: <Color>[Colors.purple[800], Colors.purple[900]],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -121,11 +130,15 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          RaisedButton(
+          RaisedGradientButton(
             onPressed: (){
               _startButtonScreen(context);
             },
-            color: Colors.purple,
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: <Color>[Colors.pink[800], Colors.pink[900]],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -145,11 +158,15 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          RaisedButton(
+          RaisedGradientButton(
             onPressed: (){
               _startArrowScreen(context);
             },
-            color: Colors.purple,
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: <Color>[Colors.teal[800], Colors.teal[900]],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -169,11 +186,15 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          RaisedButton(
+          RaisedGradientButton(
             onPressed: (){
               _startAccelerometerScreen(context);
             },
-            color: Colors.purple,
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: <Color>[Colors.indigo[800], Colors.indigo[900]],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -193,11 +214,15 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          RaisedButton(
+          RaisedGradientButton(
             onPressed: (){
               _startVoiceScreen(context);
             },
-            color: Colors.purple,
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: <Color>[Colors.yellow[800], Colors.yellow[900]],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -217,11 +242,15 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          RaisedButton(
+          RaisedGradientButton(
             onPressed: (){
               _startSettingScreen(context);
             },
-            color: Colors.purple,
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: <Color>[Colors.red[800], Colors.red[900]],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -241,11 +270,15 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          RaisedButton(
+          RaisedGradientButton(
             onPressed: (){
               _startAboutScreen();
             },
-            color: Colors.purple,
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: <Color>[Colors.deepPurple[800], Colors.deepPurple[900]],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
