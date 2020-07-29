@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:application/model/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 
 class TerminalScreen extends StatefulWidget {
@@ -41,7 +43,6 @@ class _TerminalScreenState extends State<TerminalScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    show(widget.device.name);
   }
 
   @override
@@ -67,11 +68,19 @@ class _TerminalScreenState extends State<TerminalScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width - 190,
-                  child: Text(_message.time.toString(),
-                  style: TextStyle(
-                    color: Colors.grey
+                  child: StoreConnector<AppState, AppState>(
+                    converter: (store) => store.state,
+                    builder: (context, state){
+                      return Visibility(
+                        visible: state.isEnableTime,
+                        child: Text(_message.time.toString(),
+                          style: TextStyle(
+                              color: Colors.grey
+                          ),
+                          textAlign: TextAlign.right,),
+                      );
+                    },
                   ),
-                  textAlign: TextAlign.right,),
                 ),
               ],
             ),

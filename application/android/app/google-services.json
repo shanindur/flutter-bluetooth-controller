@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "60419675638",
+    "firebase_url": "https://arduino-bluetooth-d7470.firebaseio.com",
+    "project_id": "arduino-bluetooth-d7470",
+    "storage_bucket": "arduino-bluetooth-d7470.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60419675638:android:70a12b15e83292904a23d7",
+        "android_client_info": {
+          "package_name": "com.spacebar.flutterapp.bluetooth.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60419675638-sdvm8k9a49ufp9hs9top1lehvlg4tqo2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNj0ORelhV9wuU9tb46oZlpdRjh_nCjtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60419675638-sdvm8k9a49ufp9hs9top1lehvlg4tqo2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

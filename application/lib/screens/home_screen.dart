@@ -1,16 +1,20 @@
-import 'package:application/screens/button_screen.dart';
-import 'package:application/screens/switch_screen.dart';
-import 'package:application/screens/terminal_screen.dart';
+import 'package:application/screens/menu_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+//For firebase
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_database/firebase_database.dart';
 // For performing some operations asynchronously
 import 'dart:async';
 import 'dart:convert';
 
 // For using PlatformException
 import 'package:flutter/services.dart';
+
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:launch_review/launch_review.dart';
 
 class HomeApp extends StatefulWidget {
   @override
@@ -22,23 +26,17 @@ class _HomeAppState extends State<HomeApp> {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
   // Initializing a global key, as it would help us in showing a SnackBar later
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _dropDownKey = new GlobalKey<ScaffoldState>();
   // Get the instance of the Bluetooth
   FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
   // Track the Bluetooth connection with the remote device
   BluetoothConnection connection;
+  //Firebase
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   int _deviceState;
 
   bool isDisconnecting = false;
-
-  Map<String, Color> colors = {
-    'onBorderColor': Colors.green,
-    'offBorderColor': Colors.red,
-    'neutralBorderColor': Colors.transparent,
-    'onTextColor': Colors.green,
-    'offTextColor': Colors.red[700],
-    'neutralTextColor': Colors.blue,
-  };
 
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -59,10 +57,12 @@ class _HomeAppState extends State<HomeApp> {
   @override
   void initState() {
     super.initState();
+    readData();
 
     //get package information
     _initPackageInfo();
-
+    //Firebase Cloud Messaging
+    _initFCM();
     // Get current state
     FlutterBluetoothSerial.instance.state.then((state) {
       setState(() {
@@ -98,8 +98,16 @@ class _HomeAppState extends State<HomeApp> {
     });
   }
 
+  Future<void> _initFCM() async {
+    //Firebase
+    var token = await _firebaseMessaging.getToken();
+    print("Instance ID: " + token);
+  }
+
+
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     // Avoid memory leak and disconnect
     if (isConnected) {
       isDisconnecting = true;
@@ -108,6 +116,11 @@ class _HomeAppState extends State<HomeApp> {
     }
 
     super.dispose();
+  }
+
+  setPortraitOrientation()  {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp]);
   }
 
   // Request Bluetooth permission from the user
@@ -154,6 +167,9 @@ class _HomeAppState extends State<HomeApp> {
   // Now, its time to build the UI
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).orientation != null) {
+      setPortraitOrientation();
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -187,6 +203,9 @@ class _HomeAppState extends State<HomeApp> {
                 await getPairedDevices().then((_) {
                   show('Device list refreshed');
                 });
+                if(isConnected){
+                  _disconnect();
+                }
               },
             ),
           ],
@@ -200,8 +219,8 @@ class _HomeAppState extends State<HomeApp> {
                   visible: _isButtonUnavailable &&
                       _bluetoothState == BluetoothState.STATE_ON,
                   child: LinearProgressIndicator(
-                    backgroundColor: Colors.red[200],
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                    backgroundColor: Colors.pink[200],
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.pink),
                   ),
                 ),
                 Padding(
@@ -335,15 +354,18 @@ class _HomeAppState extends State<HomeApp> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              DropdownButton(
-                                hint: Text("Select a paired device",
-                                style: TextStyle(
-                                  fontFamily: 'Lato',
-                                ),),
-                                items: _getDeviceItems(),
-                                onChanged: (value) =>
-                                    setState(() => _device = value),
-                                value: _devicesList.isNotEmpty ? _device : null,
+                              DropdownButtonHideUnderline(
+                                key: _dropDownKey,
+                                child: DropdownButton(
+                                  hint: Text("Select a paired device",
+                                  style: TextStyle(
+                                    fontFamily: 'Lato',
+                                  ),),
+                                  items: _getDeviceItems(),
+                                  onChanged: (value) =>
+                                      setState(() => _device = value),
+                                  value: _devicesList.isNotEmpty ? _device : null,
+                                ),
                               ),
                               RaisedButton(
                                 color: _connected ? Colors.red : Color(0xFF00979d),
@@ -361,111 +383,43 @@ class _HomeAppState extends State<HomeApp> {
                           ),
                         ),
                         SizedBox(height: 10.0),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text("Controller",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Lato',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0
-                                ),)),
-                        ),
                         Container(
-                          margin: EdgeInsets.only(top: 20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  if (isConnected) {
-                                    print('Connect -> selected ' + _device.address);
-                                    _startSwitchScreen(context, _device);
-                                  } else {
-                                    show('No device selected');
-                                  }
-                                },
-                                child: Container(
-                                  height: 100.0, // height of the button
-                                  width: 100.0, // width of the button
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFF00979d),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
+                          margin: EdgeInsets.only(top: 10.0),
+                          height: 200.0,
+                          width: 200.0,
+                          child: Padding(
+                              padding: const EdgeInsets.all(40.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      offset: Offset(0.0, 1.0), //(x,y)
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                ),
+                                child: ClipOval(
+                                  child: RaisedButton(
+                                    onPressed: () async {
+                                      if (isConnected) {
+                                        print('Connect -> selected ' + _device.address);
+                                        _startNextScreen(context, _device);
+                                      } else {
+                                        show('No device selected');
+                                      }
+                                    },
+                                    color: isConnected ? Colors.green : Colors.grey,
+                                    child: Text("Begin",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25.0
+                                      ),),
                                   ),
-                                  child: Center(child: Text('Switch',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Lato',
-                                    ),)),
-                                ),),
-                              GestureDetector(
-                                onTap: () async {
-                                  if (isConnected) {
-                                    print('Connect -> selected ' + _device.address);
-                                    _startTerminalScreen(context, _device);
-                                  } else {
-                                    show('No device selected');
-                                  }
-                                },
-                                child: Container(
-                                  height: 100.0, // height of the button
-                                  width: 100.0, // width of the button
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFF00979d),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(child: Text('Terminal',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Lato',
-                                    ),)),
-                                ),),
-                              GestureDetector(
-                                onTap: () async {
-                                  if (isConnected) {
-                                    print('Connect -> selected ' + _device.address);
-                                    _startButtonScreen(context, _device);
-                                  } else {
-                                    show('No device selected');
-                                  }
-                                },
-                                child: Container(
-                                  height: 100.0, // height of the button
-                                  width: 100.0, // width of the button
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFF00979d),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(child: Text('Buttons',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Lato',
-                                    ),)),
-                                ),),
-                            ],
+                                ),
+                              )
                           ),
                         ),
                       ],
@@ -474,10 +428,9 @@ class _HomeAppState extends State<HomeApp> {
                   ],
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height - 600.0,
-                  margin: EdgeInsets.only(bottom: 10.0),
+                  margin: EdgeInsets.only(top: 30.0, bottom: 10.0),
                   alignment: Alignment.bottomCenter,
-                  child: Text("Version "+_packageInfo.version + "\nPowered by Shanindu Rajapaksha" ,
+                  child: Text("Version "+_packageInfo.version + "\n\nPowered by Shanindu Rajapaksha" ,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.grey,
@@ -513,12 +466,12 @@ class _HomeAppState extends State<HomeApp> {
 
   // Method to connect to bluetooth
   void _connect() async {
-    setState(() {
-      _isButtonUnavailable = true;
-    });
     if (_device == null) {
       show('No device selected');
     } else {
+      setState(() {
+        _isButtonUnavailable = true;
+      });
       if (!isConnected) {
         await BluetoothConnection.toAddress(_device.address)
             .then((_connection) {
@@ -527,6 +480,7 @@ class _HomeAppState extends State<HomeApp> {
           setState(() {
             _connected = true;
           });
+          show('Device connected');
 
           connection.input.listen(null).onDone(() {
             if (isDisconnecting) {
@@ -541,8 +495,8 @@ class _HomeAppState extends State<HomeApp> {
         }).catchError((error) {
           print('Cannot connect, exception occurred');
           print(error);
+          show('Device could not connect');
         });
-        show('Device connected');
 
         setState(() => _isButtonUnavailable = false);
       }
@@ -592,55 +546,11 @@ class _HomeAppState extends State<HomeApp> {
     }
   }
 
-  // Method to send message,
-  // for turning the Bluetooth device on
-  void _sendOnMessageToBluetooth() async {
-//    connection.output.add(utf8.encode("1" + "\r\n"));
-    connection.output.add(utf8.encode("1"));
-    await connection.output.allSent;
-    show('Device Turned On');
-    setState(() {
-      _deviceState = 1; // device on
-    });
-  }
-
-  // Method to send message,
-  // for turning the Bluetooth device off
-  void _sendOffMessageToBluetooth() async {
-//    connection.output.add(utf8.encode("0" + "\r\n"));
-    connection.output.add(utf8.encode("0"));
-    await connection.output.allSent;
-    show('Device Turned Off');
-    setState(() {
-      _deviceState = -1; // device off
-    });
-  }
-
-  void _startSwitchScreen(BuildContext context, BluetoothDevice device) {
+  void _startNextScreen(BuildContext context, BluetoothDevice device) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return SwitchScreen(device: device, connection: connection);
-        },
-      ),
-    );
-  }
-
-  void _startTerminalScreen(BuildContext context, BluetoothDevice device) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return TerminalScreen(device: device, connection: connection,);
-        },
-      ),
-    );
-  }
-
-  void _startButtonScreen(BuildContext context, BluetoothDevice device) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return ButtonScreen(device: device, connection: connection);
+          return MenuScreen(device: device, connection: connection);
         },
       ),
     );
@@ -661,5 +571,36 @@ class _HomeAppState extends State<HomeApp> {
         duration: duration,
       ),
     );
+  }
+
+  Future<String> readData() async {
+    String result = (await FirebaseDatabase.instance.reference().child("app_data/version").once()).value.toString();
+    if(_packageInfo.version != result){
+      _onAlertButtonPressed(context);
+    }
+    return result;
+  }
+
+  // Alert with single button.
+  _onAlertButtonPressed(context) {
+    Alert(
+      context: context,
+      type: AlertType.info,
+      title: "Update  ",
+      desc: "A new update is available.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Update",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            LaunchReview.launch(androidAppId : 'com.spacebar.flutterapp.bluetooth.application');
+            Navigator.pop(context);
+          },
+          width: 120,
+        )
+      ],
+    ).show();
   }
 }
