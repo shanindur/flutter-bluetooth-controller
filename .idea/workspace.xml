@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0a1fffbc-c480-46d4-af08-b8ce69d92122" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/application/android/app/google-services.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/application/android/settings_aar.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/application/lib/screens/arrow_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/application/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/application/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/android/build/build-attribution/androidGradlePluginAttributionData" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/application/lib/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/application/lib/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/application/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/application/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/lib/screens/setting_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/application/lib/screens/setting_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,9 +38,9 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="421" y="100" key="FileChooserDialogImpl" timestamp="1595606106882">
+    <state x="421" y="100" key="FileChooserDialogImpl" timestamp="1596046311501">
       <screen x="0" y="0" width="1280" height="689" />
     </state>
-    <state x="421" y="100" key="FileChooserDialogImpl/0.0.1280.689@0.0.1280.689" timestamp="1595606106882" />
+    <state x="421" y="100" key="FileChooserDialogImpl/0.0.1280.689@0.0.1280.689" timestamp="1596046311501" />
   </component>
 </project>

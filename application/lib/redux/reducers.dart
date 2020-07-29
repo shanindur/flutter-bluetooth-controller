@@ -8,5 +8,9 @@ AppState reducer(AppState prevState, dynamic action){
     newState.isAutoConnect = action.payload;
   }
 
+  if(action is ChangeEnableTime){
+    newState.isEnableTime = action.payload;
+  }
+
   return newState;
 }

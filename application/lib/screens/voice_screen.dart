@@ -91,7 +91,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
               height: 25.0,
               color: _connectionStatus == 'ConnectivityResult.none'? Colors.red : Colors.green,
           child:  Center(
-            child: Text(_connectionStatus == 'ConnectivityResult.none'? 'Not Connected' : 'Conneted',
+            child: Text(_connectionStatus == 'ConnectivityResult.none'? 'Offline' : 'Online',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white

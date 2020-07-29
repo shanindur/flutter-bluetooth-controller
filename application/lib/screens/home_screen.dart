@@ -203,6 +203,9 @@ class _HomeAppState extends State<HomeApp> {
                 await getPairedDevices().then((_) {
                   show('Device list refreshed');
                 });
+                if(isConnected){
+                  _disconnect();
+                }
               },
             ),
           ],
@@ -216,8 +219,8 @@ class _HomeAppState extends State<HomeApp> {
                   visible: _isButtonUnavailable &&
                       _bluetoothState == BluetoothState.STATE_ON,
                   child: LinearProgressIndicator(
-                    backgroundColor: Colors.red[200],
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                    backgroundColor: Colors.pink[200],
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.pink),
                   ),
                 ),
                 Padding(
@@ -463,12 +466,12 @@ class _HomeAppState extends State<HomeApp> {
 
   // Method to connect to bluetooth
   void _connect() async {
-    setState(() {
-      _isButtonUnavailable = true;
-    });
     if (_device == null) {
       show('No device selected');
     } else {
+      setState(() {
+        _isButtonUnavailable = true;
+      });
       if (!isConnected) {
         await BluetoothConnection.toAddress(_device.address)
             .then((_connection) {
@@ -477,6 +480,7 @@ class _HomeAppState extends State<HomeApp> {
           setState(() {
             _connected = true;
           });
+          show('Device connected');
 
           connection.input.listen(null).onDone(() {
             if (isDisconnecting) {
@@ -491,8 +495,8 @@ class _HomeAppState extends State<HomeApp> {
         }).catchError((error) {
           print('Cannot connect, exception occurred');
           print(error);
+          show('Device could not connect');
         });
-        show('Device connected');
 
         setState(() => _isButtonUnavailable = false);
       }
