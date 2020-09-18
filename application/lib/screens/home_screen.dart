@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+
 //For firebase
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_database/firebase_database.dart';
+
 // For performing some operations asynchronously
 import 'dart:async';
 import 'dart:convert';
@@ -24,13 +26,17 @@ class HomeApp extends StatefulWidget {
 class _HomeAppState extends State<HomeApp> {
   // Initializing the Bluetooth connection state to be unknown
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
+
   // Initializing a global key, as it would help us in showing a SnackBar later
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<ScaffoldState> _dropDownKey = new GlobalKey<ScaffoldState>();
+
   // Get the instance of the Bluetooth
   FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
+
   // Track the Bluetooth connection with the remote device
   BluetoothConnection connection;
+
   //Firebase
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -104,7 +110,6 @@ class _HomeAppState extends State<HomeApp> {
     print("Instance ID: " + token);
   }
 
-
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -118,9 +123,8 @@ class _HomeAppState extends State<HomeApp> {
     super.dispose();
   }
 
-  setPortraitOrientation()  {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp]);
+  setPortraitOrientation() {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   // Request Bluetooth permission from the user
@@ -203,7 +207,7 @@ class _HomeAppState extends State<HomeApp> {
                 await getPairedDevices().then((_) {
                   show('Device list refreshed');
                 });
-                if(isConnected){
+                if (isConnected) {
                   _disconnect();
                 }
               },
@@ -227,13 +231,14 @@ class _HomeAppState extends State<HomeApp> {
                   padding: const EdgeInsets.all(10.0),
                   child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text("General",
+                      child: Text(
+                        "General",
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Lato',
-                            fontSize: 18.0
-                        ),)),
+                            fontSize: 18.0),
+                      )),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -309,11 +314,13 @@ class _HomeAppState extends State<HomeApp> {
                       ),
                       RaisedButton(
                         elevation: 2,
-                        child: Text("Settings",
+                        child: Text(
+                          "Settings",
                           style: TextStyle(
                             color: Colors.black,
                             fontFamily: 'Lato',
-                          ),),
+                          ),
+                        ),
                         onPressed: () {
                           FlutterBluetoothSerial.instance.openSettings();
                         },
@@ -326,22 +333,23 @@ class _HomeAppState extends State<HomeApp> {
                   padding: const EdgeInsets.all(10.0),
                   child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text("Paired Devices",
+                      child: Text(
+                        "Paired Devices",
                         style: TextStyle(
                             color: Colors.black,
                             fontFamily: 'Lato',
                             fontWeight: FontWeight.bold,
-                            fontSize: 18.0
-                        ),)),
+                            fontSize: 18.0),
+                      )),
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
-                  child:  Text("Note: If you can't find the device in the list, please pair the device by going to the settings.",
+                  child: Text(
+                    "Note: If you can't find the device in the list, please pair the device by going to the settings.",
                     style: TextStyle(
                         fontStyle: FontStyle.italic,
                         fontFamily: 'Lato',
-                        color: Colors.grey
-                    ),
+                        color: Colors.grey),
                     textAlign: TextAlign.justify,
                   ),
                 ),
@@ -357,27 +365,32 @@ class _HomeAppState extends State<HomeApp> {
                               DropdownButtonHideUnderline(
                                 key: _dropDownKey,
                                 child: DropdownButton(
-                                  hint: Text("Select a paired device",
-                                  style: TextStyle(
-                                    fontFamily: 'Lato',
-                                  ),),
+                                  hint: Text(
+                                    "Select a paired device",
+                                    style: TextStyle(
+                                      fontFamily: 'Lato',
+                                    ),
+                                  ),
                                   items: _getDeviceItems(),
                                   onChanged: (value) =>
                                       setState(() => _device = value),
-                                  value: _devicesList.isNotEmpty ? _device : null,
+                                  value:
+                                      _devicesList.isNotEmpty ? _device : null,
                                 ),
                               ),
                               RaisedButton(
-                                color: _connected ? Colors.red : Color(0xFF00979d),
+                                color:
+                                    _connected ? Colors.red : Color(0xFF00979d),
                                 onPressed: _isButtonUnavailable
                                     ? null
                                     : _connected ? _disconnect : _connect,
-                                child:
-                                Text(_connected ? 'Disconnect' : 'Connect',
+                                child: Text(
+                                  _connected ? 'Disconnect' : 'Connect',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Lato',
-                                  ),),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -405,38 +418,40 @@ class _HomeAppState extends State<HomeApp> {
                                   child: RaisedButton(
                                     onPressed: () async {
                                       if (isConnected) {
-                                        print('Connect -> selected ' + _device.address);
+                                        print('Connect -> selected ' +
+                                            _device.address);
                                         _startNextScreen(context, _device);
                                       } else {
                                         show('No device selected');
                                       }
                                     },
-                                    color: isConnected ? Colors.green : Colors.grey,
-                                    child: Text("Begin",
+                                    color: isConnected
+                                        ? Colors.green
+                                        : Colors.grey,
+                                    child: Text(
+                                      "Begin",
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 25.0
-                                      ),),
+                                          color: Colors.white, fontSize: 25.0),
+                                    ),
                                   ),
                                 ),
-                              )
-                          ),
+                              )),
                         ),
                       ],
                     ),
-
                   ],
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 30.0, bottom: 10.0),
                   alignment: Alignment.bottomCenter,
-                  child: Text("Version "+_packageInfo.version + "\n\nPowered by Shanindu Rajapaksha" ,
+                  child: Text(
+                    "Version " +
+                        _packageInfo.version +
+                        "\n\nPowered by Shanindu Rajapaksha",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        color: Colors.grey,
-                        fontFamily: 'Lato',
-                        fontSize: 14.0
-                    ),),
+                        color: Colors.grey, fontFamily: 'Lato', fontSize: 14.0),
+                  ),
                 )
               ],
             ),
@@ -559,9 +574,9 @@ class _HomeAppState extends State<HomeApp> {
   // Method to show a Snackbar,
   // taking message as the text
   Future show(
-      String message, {
-        Duration duration: const Duration(seconds: 3),
-      }) async {
+    String message, {
+    Duration duration: const Duration(seconds: 3),
+  }) async {
     await new Future.delayed(new Duration(milliseconds: 100));
     _scaffoldKey.currentState.showSnackBar(
       new SnackBar(
@@ -574,8 +589,13 @@ class _HomeAppState extends State<HomeApp> {
   }
 
   Future<String> readData() async {
-    String result = (await FirebaseDatabase.instance.reference().child("app_data/version").once()).value.toString();
-    if(_packageInfo.version != result){
+    String result = (await FirebaseDatabase.instance
+            .reference()
+            .child("app_data/version")
+            .once())
+        .value
+        .toString();
+    if (_packageInfo.version != result) {
       _onAlertButtonPressed(context);
     }
     return result;
@@ -595,7 +615,8 @@ class _HomeAppState extends State<HomeApp> {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () {
-            LaunchReview.launch(androidAppId : 'com.spacebar.flutterapp.bluetooth.application');
+            LaunchReview.launch(
+                androidAppId: 'com.spacebar.flutterapp.bluetooth.application');
             Navigator.pop(context);
           },
           width: 120,

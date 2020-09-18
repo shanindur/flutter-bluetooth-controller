@@ -12,7 +12,6 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:connectivity/connectivity.dart';
 
-
 class VoiceScreen extends StatefulWidget {
   final BluetoothConnection connection;
   final BluetoothDevice device;
@@ -43,7 +42,8 @@ class _VoiceScreenState extends State<VoiceScreen> {
     _initSpeechState();
     _hasSpeech = false;
     initConnectivity();
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     super.initState();
   }
 
@@ -77,65 +77,74 @@ class _VoiceScreenState extends State<VoiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Voice Control",
+        title: Text(
+          "Voice Control",
           style: TextStyle(
             fontFamily: 'Lato',
-          ),),
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Color(0xFF00979d),
       ),
       body: Column(
         children: [
-          _connectionStatus == 'ConnectivityResult.none'? Container(
-            width: MediaQuery.of(context).size.width,
-              height: 25.0,
-              color: _connectionStatus == 'ConnectivityResult.none'? Colors.red : Colors.green,
-          child:  Center(
-            child: Text(_connectionStatus == 'ConnectivityResult.none'? 'Offline' : 'Online',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white
-            ),),
-          ),):Container(),
+          _connectionStatus == 'ConnectivityResult.none'
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 25.0,
+                  color: _connectionStatus == 'ConnectivityResult.none'
+                      ? Colors.red
+                      : Colors.green,
+                  child: Center(
+                    child: Text(
+                      _connectionStatus == 'ConnectivityResult.none'
+                          ? 'Offline'
+                          : 'Online',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              : Container(),
           Container(
             height: MediaQuery.of(context).size.height - 150,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(_text.isEmpty ? "..." : _text,
-                    style: TextStyle(
-                        fontFamily: 'Lato',
-                        fontSize: 25.0
-                    ),),
+                  Text(
+                    _text.isEmpty ? "..." : _text,
+                    style: TextStyle(fontFamily: 'Lato', fontSize: 25.0),
+                  ),
                   Container(
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
                               blurRadius: 0.26,
                               spreadRadius: level * 1.5,
-                              color: Colors.black.withOpacity(0.1)
-                          )
+                              color: Colors.black.withOpacity(0.1))
                         ],
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(50))
-                    ),
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
                     child: FloatingActionButton(
-                        onPressed: (){
-                          !_hasSpeech || speech.isListening ? null : startListening();
+                        onPressed: () {
+                          !_hasSpeech || speech.isListening
+                              ? null
+                              : startListening();
                         },
                         child: Icon(Icons.mic,
-                            color: speech.isListening ? Colors.redAccent : Colors.white)
-                    ),
+                            color: speech.isListening
+                                ? Colors.redAccent
+                                : Colors.white)),
                   ),
                 ],
               ),
             ),
           ),
-          Text('Say "switch on / switch off"',
-          style: TextStyle(
-            color: Colors.grey
-          ),)
+          Text(
+            'Say "go forward / come backward"',
+            style: TextStyle(color: Colors.grey),
+          )
         ],
       ),
     );
@@ -143,8 +152,8 @@ class _VoiceScreenState extends State<VoiceScreen> {
 
   void _initSpeechState() async {
     bool hasSpeech = await speech.initialize(
-      onError: errorListener, onStatus: statusListener);
-    if(!mounted){
+        onError: errorListener, onStatus: statusListener);
+    if (!mounted) {
       return;
     }
     setState(() {
@@ -152,12 +161,12 @@ class _VoiceScreenState extends State<VoiceScreen> {
     });
   }
 
-  void statusListener(String status){
+  void statusListener(String status) {
     print(status);
   }
 
   void errorListener(SpeechRecognitionError error) {
-     print("Received error status: $error");
+    print("Received error status: $error");
   }
 
   startListening() {
@@ -181,12 +190,24 @@ class _VoiceScreenState extends State<VoiceScreen> {
   }
 
   void resultListener(SpeechRecognitionResult result) {
-    if(result.finalResult){
-      if(result.recognizedWords == "switch off"){
-        _sendMessageToBluetooth("0");
-      }
-      if(result.recognizedWords == "switch on"){
+    if (result.finalResult) {
+      if (result.recognizedWords == "go forward") {
         _sendMessageToBluetooth("1");
+      }
+      if (result.recognizedWords == "come") {
+        _sendMessageToBluetooth("2");
+      }
+      if (result.recognizedWords == "turn left") {
+        _sendMessageToBluetooth("4");
+      }
+      if (result.recognizedWords == "turn right") {
+        _sendMessageToBluetooth("3");
+      }
+      if (result.recognizedWords == "stop") {
+        _sendMessageToBluetooth("5");
+      }
+      if (result.recognizedWords == "enjoy yourself") {
+        _sendMessageToBluetooth("6");
       }
 
       setState(() {
@@ -210,10 +231,10 @@ class _VoiceScreenState extends State<VoiceScreen> {
         try {
           if (!kIsWeb && Platform.isIOS) {
             LocationAuthorizationStatus status =
-            await _connectivity.getLocationServiceAuthorization();
+                await _connectivity.getLocationServiceAuthorization();
             if (status == LocationAuthorizationStatus.notDetermined) {
               status =
-              await _connectivity.requestLocationServiceAuthorization();
+                  await _connectivity.requestLocationServiceAuthorization();
             }
             if (status == LocationAuthorizationStatus.authorizedAlways ||
                 status == LocationAuthorizationStatus.authorizedWhenInUse) {
@@ -232,10 +253,10 @@ class _VoiceScreenState extends State<VoiceScreen> {
         try {
           if (!kIsWeb && Platform.isIOS) {
             LocationAuthorizationStatus status =
-            await _connectivity.getLocationServiceAuthorization();
+                await _connectivity.getLocationServiceAuthorization();
             if (status == LocationAuthorizationStatus.notDetermined) {
               status =
-              await _connectivity.requestLocationServiceAuthorization();
+                  await _connectivity.requestLocationServiceAuthorization();
             }
             if (status == LocationAuthorizationStatus.authorizedAlways ||
                 status == LocationAuthorizationStatus.authorizedWhenInUse) {
@@ -278,9 +299,9 @@ class _VoiceScreenState extends State<VoiceScreen> {
   // Method to show a Snackbar,
   // taking message as the text
   Future show(
-      String message, {
-        Duration duration: const Duration(seconds: 3),
-      }) async {
+    String message, {
+    Duration duration: const Duration(seconds: 3),
+  }) async {
     await new Future.delayed(new Duration(milliseconds: 100));
     _scaffoldKey.currentState.showSnackBar(
       new SnackBar(
