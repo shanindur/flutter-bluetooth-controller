@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0a1fffbc-c480-46d4-af08-b8ce69d92122" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/application/lib/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/application/lib/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/lib/screens/setting_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/application/lib/screens/setting_screen.dart" afterDir="false" />
-    </list>
+    <list default="true" id="0a1fffbc-c480-46d4-af08-b8ce69d92122" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

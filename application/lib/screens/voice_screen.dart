@@ -191,22 +191,22 @@ class _VoiceScreenState extends State<VoiceScreen> {
 
   void resultListener(SpeechRecognitionResult result) {
     if (result.finalResult) {
-      if (result.recognizedWords == "go forward") {
+      if (result.recognizedWords.contains("go") || result.recognizedWords.contains("forward")) {
         _sendMessageToBluetooth("1");
       }
-      if (result.recognizedWords == "come") {
+      if (result.recognizedWords.contains("come") || result.recognizedWords.contains("back")) {
         _sendMessageToBluetooth("2");
       }
-      if (result.recognizedWords == "turn left") {
-        _sendMessageToBluetooth("4");
-      }
-      if (result.recognizedWords == "turn right") {
+      if (result.recognizedWords.contains("right")) {
         _sendMessageToBluetooth("3");
       }
-      if (result.recognizedWords == "stop") {
+      if (result.recognizedWords.contains("left")) {
+        _sendMessageToBluetooth("4");
+      }
+      if (result.recognizedWords.contains("stop")) {
         _sendMessageToBluetooth("5");
       }
-      if (result.recognizedWords == "enjoy yourself") {
+      if (result.recognizedWords.contains("enjoy")) {
         _sendMessageToBluetooth("6");
       }
 
