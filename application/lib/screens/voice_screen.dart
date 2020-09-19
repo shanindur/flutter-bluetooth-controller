@@ -142,7 +142,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
             ),
           ),
           Text(
-            'Say "go forward / come backward"',
+            'Add voice commands from Settings.',
             style: TextStyle(color: Colors.grey),
           )
         ],

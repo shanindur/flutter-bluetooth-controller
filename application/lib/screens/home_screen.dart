@@ -417,13 +417,13 @@ class _HomeAppState extends State<HomeApp> {
                                 child: ClipOval(
                                   child: RaisedButton(
                                     onPressed: () async {
-                                      if (isConnected) {
-                                        print('Connect -> selected ' +
-                                            _device.address);
+                                      // if (isConnected) {
+                                      //   print('Connect -> selected ' +
+                                      //       _device.address);
                                         _startNextScreen(context, _device);
-                                      } else {
-                                        show('No device selected');
-                                      }
+                                      // } else {
+                                      //   show('No device selected');
+                                      // }
                                     },
                                     color: isConnected
                                         ? Colors.green
