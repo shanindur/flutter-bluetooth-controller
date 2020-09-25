@@ -194,21 +194,50 @@ class _VoiceScreenState extends State<VoiceScreen> {
       if (result.recognizedWords.contains("go") || result.recognizedWords.contains("forward")) {
         _sendMessageToBluetooth("1");
       }
-      if (result.recognizedWords.contains("come") || result.recognizedWords.contains("back")) {
+      else if (result.recognizedWords.contains("come") || result.recognizedWords.contains("back")) {
         _sendMessageToBluetooth("2");
       }
-      if (result.recognizedWords.contains("right")) {
+
+      else if (result.recognizedWords.contains("90")) {
+        if (result.recognizedWords.contains("left")) {
+          _sendMessageToBluetooth("7");
+        }
+        else if (result.recognizedWords.contains("right")) {
+          _sendMessageToBluetooth("8");
+        }
+      }
+      else if (result.recognizedWords.contains("180")) {
+        if (result.recognizedWords.contains("left")) {
+          _sendMessageToBluetooth("9");
+        }
+        else if (result.recognizedWords.contains("right")) {
+          _sendMessageToBluetooth("a");
+        }
+      }
+      else if (result.recognizedWords.contains("360")) {
+        if (result.recognizedWords.contains("left")) {
+          _sendMessageToBluetooth("b");
+        }
+        else if (result.recognizedWords.contains("right")) {
+          _sendMessageToBluetooth("c");
+        }
+      }
+      else if (result.recognizedWords.contains("right")) {
         _sendMessageToBluetooth("3");
       }
-      if (result.recognizedWords.contains("left")) {
+      else if (result.recognizedWords.contains("left")) {
         _sendMessageToBluetooth("4");
       }
-      if (result.recognizedWords.contains("stop")) {
+      else if (result.recognizedWords.contains("stop")) {
         _sendMessageToBluetooth("5");
       }
-      if (result.recognizedWords.contains("enjoy")) {
+      else if (result.recognizedWords.contains("enjoy")) {
         _sendMessageToBluetooth("6");
       }
+      else if (result.recognizedWords.contains("follow") || result.recognizedWords.contains("line")) {
+        _sendMessageToBluetooth("d");
+      }
+
 
       setState(() {
         _text = result.recognizedWords;
